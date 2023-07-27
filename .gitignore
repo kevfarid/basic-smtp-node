@@ -1,0 +1,18 @@
+# Ignore automatically generated files
+node_modules/
+dist/
+*.log
+
+# Ignore specific files and folders
+.env
+.DS_Store
+
+# Ignore IDE configuration files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.sln
+*.csproj
+
+# Add more rules here based on your project's needs
