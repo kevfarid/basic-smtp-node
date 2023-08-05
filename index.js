@@ -8,6 +8,9 @@ dotenv.config();
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
+const client = require('@sendgrid/client');
+client.setApiKey(process.env.SENDGRID_API_KEY);
+
 const cors = require('cors');
 app.use(cors());
 
@@ -45,6 +48,40 @@ app.post('/api/send-email', (req, res) => {
     .catch((error) => {
       console.error('Error sending email:', error);
       res.status(500).send('Error sending email.');
+    });
+});
+
+app.put('/api/contacts', (req, res) => {
+  const { email, ...body } = req.body;
+
+  if (!email) {
+    res.status(400).send('Missing required field: email.');
+    return;
+  }
+
+  const data = {
+    contacts: [
+      {
+        email,
+        ...body,
+      },
+    ],
+  };
+
+  const request = {
+    url: `/v3/marketing/contacts`,
+    method: 'PUT',
+    body: data,
+  };
+
+  client
+    .request(request)
+    .then(() => {
+      res.send('Contact added successfully.');
+    })
+    .catch((error) => {
+      console.error('Error adding contact:', error);
+      res.status(500).send('Error adding contact.');
     });
 });
 
